@@ -46,5 +46,6 @@ class universe():
 
         return {'mass':[body.mass for body in self.bodys], 'x':[body.position[0] for body in self.bodys], 'y':[body.position[1] for body in self.bodys], 'z':[body.position[2] for body in self.bodys], 'vx':[body.velocity[0] for body in self.bodys], 'vy':[body.velocity[1] for body in self.bodys], 'vz':[body.velocity[2] for body in self.bodys]}
 
+    #Put a new body in the universe
     def put(self, body):
         self.bodys.append(body)
