@@ -1,10 +1,11 @@
 import numpy as np
+from pandas import DataFrame
 
 class body():
     
     def __init__(self, mass, position, velocity): 
         self.mass = mass
-        self.diamether = mass**(1/3)
+        self.diameter = mass**(1/3)
         self.position = np.array(position)
         self.velocity = np.array(velocity)
         
@@ -25,18 +26,20 @@ class body():
 
 class universe():
 
-    def __init__(self, bodys, G, dt):
-        self.bodys = bodys
+    def __init__(self, bodies, G, H, dt):
+        self.bodies = bodies[::]
         self.G = G
+        self.H = H
         self.dt = dt
         self.time = 0
+        self.size = len(self.bodies)
 
-    #Print
+    #Print 
     def __repr__(self):
 
         data = ""
         
-        for body in self.bodys:
+        for body in self.bodies:
             data += "{}, {}, {}, {}, {}, {}, {}\n".format(body.mass, body.position[0], body.position[1], body.position[2], body.velocity[0], body.velocity[1], body.velocity[2])
 
         return data
@@ -44,8 +47,41 @@ class universe():
     #Create a dictionary with the universe data
     def data(self):
 
-        return {'mass':[body.mass for body in self.bodys], 'x':[body.position[0] for body in self.bodys], 'y':[body.position[1] for body in self.bodys], 'z':[body.position[2] for body in self.bodys], 'vx':[body.velocity[0] for body in self.bodys], 'vy':[body.velocity[1] for body in self.bodys], 'vz':[body.velocity[2] for body in self.bodys]}
+        return DataFrame({'mass':[body.mass for body in self.bodies], 'x':[body.position[0] for body in self.bodies], 'y':[body.position[1] for body in self.bodies], 'z':[body.position[2] for body in self.bodies], 'vx':[body.velocity[0] for body in self.bodies], 'vy':[body.velocity[1] for body in self.bodies], 'vz':[body.velocity[2] for body in self.bodies]})
 
     #Put a new body in the universe
     def put(self, body):
-        self.bodys.append(body)
+            self.bodies.append(body)
+            self.size += 1
+
+    def destroy(self, body_index):
+        self.bodies.pop(body_index)
+        self.size -= 1
+
+    #Time evolution
+    def evolve(self):
+
+        aux_bodies = self.bodies[::]
+        index = np.array([i for i in range(0, self.size)])
+
+        for body in self.bodies:
+
+            this = index != aux_bodies.index(body)
+
+            #Sume of all forces in the body (Gravitacional froces)
+            force = sum([(self.G*body.mass*aux_bodies[body_j].mass/(np.linalg.norm(body.position - aux_bodies[body_j].position)**1.5))*(aux_bodies[body_j].position - body.position) for body_j in index[this]])
+            
+            #Update velocity and position
+            body.velocity = ((1 + self.dt*self.H/2)*body.velocity + (self.dt/body.mass)*force)/(1 - self.dt*self.H/2)
+            body.position = body.position + self.dt*body.velocity
+
+        # When two bodies merge
+        for body_i in index:
+            for body_j in index[body_i+1::]:
+                if np.linalg.norm(aux_bodies[body_i].position - aux_bodies[body_j].position) <= (aux_bodies[body_i].diameter + aux_bodies[body_j].diameter):
+                    aux = (aux_bodies[body_i] + aux_bodies[body_j])
+                    self.destroy(body_i)
+                    self.destroy(body_j-1)
+                    self.put(aux)
+
+        self.time += self.dt
