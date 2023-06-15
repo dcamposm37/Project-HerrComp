@@ -62,31 +62,33 @@ class universe():
     def evolve(self):
 
         aux_bodies = self.bodies[::]
-        index = np.array([i for i in range(0, self.size)])
+        index = np.arange(self.size)
 
-        for body in self.bodies:
-
-            this = index != aux_bodies.index(body)
+        for ii, body in enumerate(self.bodies):
 
             #Sume of all forces in the body (Gravitacional froces)
-            force = sum([(self.G*body.mass*aux_bodies[body_j].mass/(np.linalg.norm(body.position - aux_bodies[body_j].position)**1.5))*(aux_bodies[body_j].position - body.position) for body_j in index[this]])
+            force = sum([(self.G*body.mass*aux_bodies[body_j].mass/(np.linalg.norm(body.position - aux_bodies[body_j].position)**1.5))*(aux_bodies[body_j].position - body.position) for body_j in index[index != ii]])
             
             #Update velocity and position
             body.velocity = ((1 + self.dt*self.H/2)*body.velocity + (self.dt/body.mass)*force)/(1 - self.dt*self.H/2)
             body.position = body.position + self.dt*body.velocity
-
+        
+        
         merged = []
         # When two bodies merge
         for body_i in index:
             for body_j in index[body_i+1::]:
-                if (not body_i in merged) and (not body_j in merged) and np.linalg.norm(aux_bodies[body_i].position - aux_bodies[body_j].position) <= (aux_bodies[body_i].diameter + aux_bodies[body_j].diameter):
+                if (body_i not in merged) and (body_j not in merged) and np.linalg.norm(aux_bodies[body_i].position - aux_bodies[body_j].position) <= (aux_bodies[body_i].diameter + aux_bodies[body_j].diameter)/2:
                     
                     merged += [body_i, body_j]
 
-        for ii in range(int(len(merged)//2)):
-            aux = (aux_bodies[merged[ii]] + aux_bodies[merged[ii+1]])
-            self.destroy(merged[ii])
-            self.destroy(merged[ii+1]-1)
-            self.put(aux)           
+        merged = np.array(merged)
 
+        self.bodies = [x for ii, x in enumerate(self.bodies) if ii not in merged]
+
+        self.size -= merged.size
+
+        for ii in merged[::2]:
+            self.put(aux_bodies[ii] + aux_bodies[ii+1])
+        
         self.time += self.dt
