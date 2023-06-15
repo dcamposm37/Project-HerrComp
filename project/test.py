@@ -8,7 +8,7 @@ d = 100
 def body_in_disk(R):
 	r = R*(np.random.rand())
 	theta = 2*np.pi*np.random.rand()
-	return body(np.random.rand()*R/200, (r*np.cos(theta), r*np.sin(theta), np.random.rand()*R/10), (np.random.rand()*R/50-R/100, np.random.rand()*R/50-R/100, np.random.rand()*R/5000-R/10000))
+	return body(np.random.rand()*R/200, (r*np.cos(theta), r*np.sin(theta), np.random.rand()*R/10), (np.random.rand()*R/100-R/200, np.random.rand()*R/100-R/200, np.random.rand()*R/10000-R/20000))
 
 def body_in_square(d):
 	return body(np.random.rand()*d/100, (np.random.rand()*d-d/2, np.random.rand()*d-d/2, np.random.rand()*d/20), (np.random.rand()*d/100-d/200, np.random.rand()*d/100-d/200, np.random.rand()*d/10000-R/20000))
@@ -21,7 +21,7 @@ u1 = universe(bodies, 0.001, 0, 1)
 print('created')
 
 N=1000
-step = 5
+step = 10
 
 fig = plt.figure(figsize=(5,9))
 ax1 = fig.add_subplot(2,1,1)
