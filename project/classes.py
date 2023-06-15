@@ -75,13 +75,18 @@ class universe():
             body.velocity = ((1 + self.dt*self.H/2)*body.velocity + (self.dt/body.mass)*force)/(1 - self.dt*self.H/2)
             body.position = body.position + self.dt*body.velocity
 
+        merged = []
         # When two bodies merge
         for body_i in index:
             for body_j in index[body_i+1::]:
-                if np.linalg.norm(aux_bodies[body_i].position - aux_bodies[body_j].position) <= (aux_bodies[body_i].diameter + aux_bodies[body_j].diameter):
-                    aux = (aux_bodies[body_i] + aux_bodies[body_j])
-                    self.destroy(body_i)
-                    self.destroy(body_j-1)
-                    self.put(aux)
+                if (not body_i in merged) and (not body_j in merged) and np.linalg.norm(aux_bodies[body_i].position - aux_bodies[body_j].position) <= (aux_bodies[body_i].diameter + aux_bodies[body_j].diameter):
+                    
+                    merged += [body_i, body_j]
+
+        for ii in range(int(len(merged)//2)):
+            aux = (aux_bodies[merged[ii]] + aux_bodies[merged[ii+1]])
+            self.destroy(merged[ii])
+            self.destroy(merged[ii+1]-1)
+            self.put(aux)           
 
         self.time += self.dt
