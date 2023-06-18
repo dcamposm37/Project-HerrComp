@@ -123,8 +123,23 @@ def generate_velocities(n):
 # print(speed/100000)
 
 ############################################ PROPERTIES FOR THE 3 FIGURE
-# mean distance to the center gravity
-# def mean_distance_CG():
+
+# FUNCIÓN REDUNDANTE?
+# mean distance to the center gravity. 
+def mean_distance_CG(bodies_pos): # takes as input an array of tuples with all the positions an return
+  return mean_distance(bodies_pos, (0,0,0))
+
 
 # mean velocity to the center gravity
-# def mean_vel_CG():
+def mean_vel(bodies_vel, current_point = (0,0,0)):
+  total_vel = 0
+  x = current_point[0]
+  y = current_point[1]
+  z = current_point[2]
+
+  for vel in bodies_vel:
+    magnitude_vel = np.sqrt((vel[0] - x)**2 + (vel[1] - y)**2 + (vel[2] - z)**2)
+    total_vel += magnitude_vel
+
+  current_mean_velocitie = total_vel/len(bodies_vel)
+  return current_mean_velocitie
