@@ -6,7 +6,7 @@ import imageio
 meta_data = pd.read_csv('data/meta_data.csv')
 N_graphs = len(meta_data.index)
 
-fig = plt.figure(figsize=(5,9))
+fig = plt.figure(figsize=(6,9))
 ax1 = fig.add_subplot(2,1,1)
 ax2 = fig.add_subplot(2,1,2)
 
@@ -17,13 +17,17 @@ for ii in range(N_graphs):
 	data = pd.read_csv('data/frame%.d.csv'%(ii))
 
 	ax1.plot(data['x'], data['y'], ".")
-	# ax1.set_xlim(-d,d)
-	# ax1.set_ylim(-d,d)
-	ax1.text(0, 0, "n=%.d"%(meta_data['n_bodies'][ii]))
+	ax1.set_xlim(-3000,3000)
+	ax1.set_ylim(-3000,3000)
+	ax1.set_xlabel('x')
+	ax1.set_ylabel('y')
+	ax1.text(-2500,-2500, "n=%.d"%(meta_data['n_bodies'][ii]))
 	ax2.plot(data['x'], data['z'], ".")
-	# ax2.set_xlim(-d,d)
-	# ax2.set_ylim(-d/4,d/4)
-	ax2.text(0, 0, "n=%.d"%(meta_data['n_bodies'][ii]))
+	ax2.set_xlim(-3000,3000)
+	ax2.set_ylim(-1000,1000)
+	ax2.set_xlabel('x')
+	ax2.set_ylabel('z')
+	ax2.text(-2500, -500, "n=%.d"%(meta_data['n_bodies'][ii]))
 
 	plt.savefig(f"frames/graph{ii}.png")
 	print("%05.2f"%((ii+1)/N_graphs*100) + '%')

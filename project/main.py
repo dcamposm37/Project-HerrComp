@@ -7,8 +7,8 @@ G, H = 1, 5*10**(-8)
 
 N_bodies = 100
 N_steps = 1000
-step_size = 5
-dt = .0025
+step_size = 50
+dt = .01
 
 data = {}
 n_bodies = np.zeros(N_steps)
