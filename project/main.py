@@ -6,7 +6,7 @@ from functions import generate_velocities, random_pos
 G, H = 1, 5*10**(-8)
 
 N_bodies = 100
-N_steps = 1000
+N_steps = 10
 step_size = 50
 dt = .01
 
