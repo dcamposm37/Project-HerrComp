@@ -1,3 +1,5 @@
+import numpy as np
+
 ###################################################################### POSICION INICIAL
 # Retorna posición inicial aleatoria (distribución normal)
 def random_coordinates(mean, sigma):
@@ -14,7 +16,7 @@ def mean_distance(points, current_point = (0, 0, 0)):
   z = current_point[2]
 
   for point in points:
-    distance = math.sqrt((point[0] - x)**2 + (point[1] - y)**2 + (point[2] - z)**2)
+    distance = np.sqrt((point[0] - x)**2 + (point[1] - y)**2 + (point[2] - z)**2)
     total_distance += distance
 
   current_mean_distance = total_distance/len(points)
@@ -30,15 +32,12 @@ def total_mean_distance(points):
 
 # Retorna una lista de tuplas con las coordenadas iniciales de los 1000 cuerpos
 def random_pos(num_puntos):
-    points = []
-    points.append(random_coordinates(0, 400))  # Agregamos el primer punto en el origen
+    points=[random_coordinates(0, 400)]  # Agregamos el primer punto en el origen
 
     while len(points) < num_puntos:
         # Agrega primero 650 puntos en torno al centro
-        if len(points) < 650:
-          punto = random_coordinates(0, 400)
-          current_mean_distance = mean_distance(points, punto) # SE USA SOLO EN LA PRUEBA PARA CALCULAR LA DISTANCIA PROMEDIO ENTRE LOS CUERPOS
-          points.append(punto)
+        if len(points) < .65*num_puntos:
+          points.append(random_coordinates(0, 400))
 
         # Los demas puntos orbitan alrededor del centro
         else:
