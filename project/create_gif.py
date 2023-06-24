@@ -14,7 +14,7 @@ ax2 = fig.add_subplot(2,1,2)
 #Se crean las figuras
 for ii in range(N_graphs):
 
-	data = pd.read_csv('data_carlos/frame%.d.csv'%(ii))
+	data = pd.read_csv('data/frame%.d.csv'%(ii))
 
 	ax1.plot(data['x'], data['y'], ".")
 	ax1.set_xlim(-3000,3000)
@@ -36,7 +36,7 @@ for ii in range(N_graphs):
 	ax2.cla()
 
 
-with imageio.get_writer('data_carlos/mygif.gif', mode='I', duration=1/10) as writer:
+with imageio.get_writer('data/mygif.gif', mode='I', duration=1/10) as writer:
     for filename in ['frames/graph{}.png'.format(i) for i in range(N_graphs)]:
         image = imageio.imread(filename)
         writer.append_data(image)

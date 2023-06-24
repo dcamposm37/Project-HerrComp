@@ -21,8 +21,6 @@ velocities = generate_velocities(N_bodies)
 bodies = [body(1, positions[ii], velocities[ii]) for ii in range(N_bodies)]
 
 u1 = universe(bodies, G, H, dt)
-u1.put(body(5, (-1500, -3000, 0), (0, 70, 0)))
-u1.put(body(5, (1500, 3000, 0), (0, -70, 0)))
 
 print('created')
 
@@ -34,8 +32,6 @@ for ii in range(N_steps*step_size+1):
 		time[int(ii/step_size)] = u1.time
 		print("%05.2f"%((ii+1)/(step_size*N_steps)*100) + '%' + ': %.d'%(u1.size)+ ' %.d'%(ii/step_size))
 		if not int(ii/step_size+1)%10:
-			u1.put(body(5, (-1500, -3000, 0), (0, 70, 0)))
-			u1.put(body(5, (1500, 3000, 0), (0, -70, 0)))
 		
 	u1.evolve()
 
